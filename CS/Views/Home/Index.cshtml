@@ -1,0 +1,43 @@
+﻿@model SharedItemsViewModel
+
+<h1>Shared Items</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date Modified</th>
+            <th>Type</th>
+            <th>Size</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Shared Folders -->
+        @foreach (var folder in Model.SharedFolders)
+        {
+            <tr>
+                <td>
+                    <i class="fas fa-folder"></i>
+                    <a asp-action="SharedFolderContents" asp-route-folderId="@folder.Id">@folder.Name</a>
+                </td>
+                <td>@folder.CreatedDate.ToString("MM/dd/yyyy HH:mm")</td>
+                <td>Folder</td>
+                <td>@folder.Size</td>
+            </tr>
+        }
+
+        <!-- Shared Files -->
+        @foreach (var file in Model.SharedFiles)
+        {
+            <tr>
+                <td>
+                    <i class="fas fa-file"></i> @file.Name
+                </td>
+                <td>@file.UploadDate.ToString("MM/dd/yyyy HH:mm")</td>
+                <td>@file.Type</td>
+                <td>@file.Size</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -1,0 +1,53 @@
+﻿@model MyFolderViewModel
+
+<h2>Contents of "@Model.RootFolder.Name"</h2>
+
+<!-- Navigation Back to Shared Items -->
+<a asp-action="Index" class="btn btn-secondary mb-3">Back to Shared Items</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date Modified</th>
+            <th>Type</th>
+            <th>Size</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Subfolders -->
+        @foreach (var folder in Model.SubFolders)
+        {
+            <tr>
+                <td>
+                    <i class="fas fa-folder"></i>
+                    <a asp-action="SharedFolderContents" asp-route-folderId="@folder.Id">@folder.Name</a>
+                </td>
+                <td>@folder.CreatedDate.ToString("MM/dd/yyyy HH:mm")</td>
+                <td>Folder</td>
+                <td>----</td>
+            </tr>
+        }
+
+        <!-- Files -->
+        @foreach (var file in Model.Files)
+        {
+            <tr>
+                <td>
+                    <i class="fas fa-file"></i> @file.Name
+                </td>
+                <td>@file.UploadDate.ToString("MM/dd/yyyy HH:mm")</td>
+                <td>@file.Type</td>
+                <td>@file.Size</td>
+            </tr>
+        }
+
+        <!-- No Items Message -->
+        @if (!Model.SubFolders.Any() && !Model.Files.Any())
+        {
+            <tr>
+                <td colspan="4" class="text-center">No items available in this folder.</td>
+            </tr>
+        }
+    </tbody>
+</table>

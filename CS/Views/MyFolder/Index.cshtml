@@ -1,0 +1,101 @@
+﻿@model MyFolderViewModel
+
+<!-- Button to Add Folder -->
+<a href="@Url.Action("Create", "MyFolder", new { parentFolderId = Model.RootFolder?.Id })" class="btn btn-primary mb-3">Add Folder</a>
+
+<!-- Button to Upload File -->
+<a href="@Url.Action("UploadFile", "MyFolder", new { folderId = Model.RootFolder?.Id })" class="btn btn-success mb-3">Upload File</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Date Modified</th>
+            <th>Type</th>
+            <th>Size</th>
+            <th>Actions</th>  <!-- New column for actions -->
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Always display the "Back" folder if in a subfolder -->
+        @if (Model.RootFolder != null && Model.RootFolder.ParentFolderId.HasValue)
+        {
+            <tr>
+                <td>
+                    <i class="fas fa-folder"></i>
+                    <a asp-action="Index" asp-route-folderId="@Model.RootFolder.ParentFolderId">....</a>
+                </td>
+                <td></td>
+                <td>Folder</td>
+                <td></td>
+                <td></td>
+            </tr>
+        }
+
+        <!-- Display Folders -->
+        @foreach (var subfolder in Model.SubFolders)
+        {
+            <tr>
+                <td>
+                    <i class="fas fa-folder"></i>
+                    <a asp-action="Index" asp-route-folderId="@subfolder.Id">@subfolder.Name</a>
+                </td>
+                <td>@subfolder.CreatedDate.ToString("MM/dd/yyyy HH:mm")</td>
+                <td>Folder</td>
+                <td>@subfolder.Size</td>
+                <td>
+                    <!-- Edit Button -->
+                    <a asp-action="EditFolder" asp-route-folderId="@subfolder.Id" class="btn btn-warning btn-sm">Edit</a>
+                    
+                    <!-- Delete Button -->
+                    <form method="post" asp-action="DeleteFolder" asp-route-folderId="@subfolder.Id" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this folder and its contents?');">Delete</button>
+                    </form>
+
+                    <!-- Share Button -->
+                    <form asp-action="ShareFolder" method="post" style="display:inline">
+                        <input type="hidden" name="folderId" value="@subfolder.Id" />
+                        <button type="submit" class="btn btn-sm @((subfolder.IsShared) ? "btn-warning" : "btn-secondary")">
+                            @((subfolder.IsShared) ? "Unshare" : "Share")
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+
+        <!-- Display Files -->
+        @foreach (var file in Model.Files)
+        {
+            <tr>
+                <td>
+                    <i class="fas fa-file"></i> @file.Name
+                </td>
+                <td>@file.UploadDate.ToString("MM/dd/yyyy HH:mm")</td>
+                <td>@file.Type</td>
+                <td>@file.Size</td>
+                <td>
+                    <!-- Edit Button -->
+                    <a asp-action="EditFile" asp-route-fileId="@file.Id" class="btn btn-warning btn-sm">Edit</a>
+
+                    <!-- Delete Button -->
+                    <a asp-action="DeleteFile" asp-route-fileId="@file.Id" class="btn btn-danger btn-sm">Delete</a>
+                    <!-- Share Button -->
+                    <form asp-action="ShareFile" asp-controller="MyFolder" method="post" style="display:inline;">
+                        <input type="hidden" name="fileId" value="@file.Id" />
+                        <button type="submit" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-share"></i> Share
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+
+        <!-- If no folders or files exist, show a message -->
+        @if (!Model.SubFolders.Any() && !Model.Files.Any())
+        {
+            <tr>
+                <td colspan="5" class="text-center">No items available.</td>
+            </tr>
+        }
+    </tbody>
+</table>

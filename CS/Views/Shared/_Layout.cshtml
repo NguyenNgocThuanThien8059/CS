@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CS.styles.css" asp-append-version="true" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+    <style>
+        /* Sidebar Styles */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #f8f9fa;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1040;
+        }
+
+            #sidebar.active {
+                transform: translateX(0);
+            }
+
+        #page-content-wrapper {
+            margin-left: 0;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+            #page-content-wrapper.sidebar-active {
+                margin-left: 250px;
+            }
+
+        #sidebarCloseButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: #343a40 !important; /* Dark gray background */
+        }
+
+            .navbar .navbar-nav .nav-link {
+                color: white !important; /* White text for contrast */
+            }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <!-- Sidebar Toggle Button -->
+                <button class="btn btn-light me-2" id="sidebarToggle">
+                    <i class="bi bi-list"></i> <!-- Hamburger Icon -->
+                </button>
+                <a class="navbar-brand text-white" asp-area="" asp-controller="Home" asp-action="Index">CS</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto">
+                        <!-- Login Partial -->
+                        <partial name="_LoginPartial" />
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar">
+            <span id="sidebarCloseButton">&times;</span>
+            <div class="sidebar-heading text-center py-4"><strong>Navigation</strong></div>
+            <div class="list-group list-group-flush">
+                <a href="@Url.Action("Index", "Home")" class="list-group-item list-group-item-action bg-light">
+                    <i class="bi bi-house-door"></i> Home
+                </a>
+                <a href="@Url.Action("Index", "MyFolder")" class="list-group-item list-group-item-action bg-light">
+                    <i class="bi bi-folder"></i> My Folders
+                </a>
+                <a href="@Url.Action("Index", "Shared")" class="list-group-item list-group-item-action bg-light">
+                    <i class="bi bi-share"></i> Shared Items
+                </a>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <main role="main" class="container-fluid pt-4">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - CS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <!-- Render Scripts Section -->
+    @RenderSection("Scripts", required: false)
+
+    <script>
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebarCloseButton = document.getElementById('sidebarCloseButton');
+        const sidebar = document.getElementById('sidebar');
+        const contentWrapper = document.getElementById('page-content-wrapper');
+
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            contentWrapper.classList.toggle('sidebar-active');
+        });
+
+        sidebarCloseButton.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            contentWrapper.classList.remove('sidebar-active');
+        });
+    </script>
+</body>
+</html>

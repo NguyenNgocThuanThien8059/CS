@@ -1,0 +1,15 @@
+﻿@model ShareFolderViewModel
+<h2>Share Folder</h2>
+
+<p>Folder sharing status: <strong>@(Model.IsShared ? "Shared" : "Private")</strong></p>
+
+<form asp-action="ShareFolder" method="post">
+    <input type="hidden" asp-for="FolderId" />
+    <div class="form-group">
+        <label>
+            <input type="checkbox" asp-for="IsShared" /> Share this folder and all its contents
+        </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
